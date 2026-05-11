@@ -17,15 +17,22 @@ pipeline {
             }
         }
 
-        stage('Build Project') {
+        stage('Install Chrome & Xvfb') {
             steps {
-                sh 'mvn clean install -DskipTests'
+                sh '''
+                    sudo apt-get update
+                    sudo apt-get install -y google-chrome-stable xvfb
+                '''
             }
         }
 
-        stage('Selenium Test') {
+        stage('Run Selenium Tests with Display') {
             steps {
-                sh 'mvn test'
+                sh '''
+                    Xvfb :99 -screen 0 1920x1080x24 &
+                    export DISPLAY=:99
+                    mvn clean test
+                '''
             }
         }
     }
@@ -34,7 +41,6 @@ pipeline {
         success {
             echo 'All Selenium tests passed!'
         }
-
         failure {
             echo 'Selenium test failed.'
         }
