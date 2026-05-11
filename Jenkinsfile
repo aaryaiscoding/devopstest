@@ -25,4 +25,3 @@ post {
 success { echo 'All Selenium tests passed!' }
 failure { echo 'Selenium test failed.' }
 }
-}
