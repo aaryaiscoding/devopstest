@@ -1,48 +1,45 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'Maven'
+    }
+
     stages {
 
-        stage('Clone Repository') {
+        stage('Checkout') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/aaryaiscoding/devopstest.git'
+                url: 'https://github.com/chinmayiii/mavenselenium.git'
             }
         }
 
-        stage('Check Java and Maven') {
+        stage('Build') {
             steps {
-                sh 'java -version'
-                sh 'mvn -version'
+                sh 'mvn clean package'
             }
         }
 
-        stage('Install Chrome & Xvfb') {
+        stage('Test') {
             steps {
-                sh '''
-                    sudo apt-get update
-                    sudo apt-get install -y google-chrome-stable xvfb
-                '''
+                sh 'mvn test'
             }
         }
 
-        stage('Run Selenium Tests with Display') {
+        stage('Run Selenium') {
             steps {
-                sh '''
-                    Xvfb :99 -screen 0 1920x1080x24 &
-                    export DISPLAY=:99
-                    mvn clean test
-                '''
+                sh 'mvn exec:java'
             }
         }
     }
 
     post {
         success {
-            echo 'All Selenium tests passed!'
+            echo "Open SauceDemo: https://www.saucedemo.com"
         }
+
         failure {
-            echo 'Selenium test failed.'
+            echo "Build FAILED"
         }
     }
 }
