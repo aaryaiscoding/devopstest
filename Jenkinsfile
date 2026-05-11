@@ -10,7 +10,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                url: 'https://github.com/chinmayiii/mavenselenium.git'
+                url: 'https://github.com/aaryaiscoding/devopstest.git'
             }
         }
 
